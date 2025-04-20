@@ -1,4 +1,4 @@
-import React from 'react'
+import { StrictMode } from 'react'
 import ReactDOM from 'react-dom/client'
 
 //Bootstrap
@@ -11,10 +11,33 @@ import '../styles/index.css'
 // components
 import Home from './components/Home';
 import SecondsCounter from './components/counter';
+import { CountDown } from './components/countdown';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
+
+// Variables de control
 let counter = 0;
-setInterval(() => {
+let isReversed = false;
+
+
+const reverse = (e) => {
+  const inputValue = parseInt(e.target.value);
+  if (!isNaN(inputValue) && inputValue === counter) {
+    isReversed = true;
+  }
+}
+
+
+const interval = setInterval(() => {
+  if (isReversed) {
+    counter--;
+    if (counter === 0) {
+      clearInterval(interval);
+    }
+  } else {
+    counter++;
+  }
+
 
   let one = Math.floor((counter / 1) % 10);
   let two = Math.floor((counter / 10) % 10);
@@ -22,20 +45,20 @@ setInterval(() => {
   let four = Math.floor((counter / 1000) % 10);
   let five = Math.floor((counter / 10000) % 10);
   let six = Math.floor((counter / 100000) % 10);
-  counter++
 
-  
+  // Render
   root.render(
-    <React.StrictMode>
+    <StrictMode>
       <SecondsCounter
         digOne={one}
         digTwo={two}
         digThree={three}
         digFour={four}
         digFive={five}
-        digSix={six}/>
-        
+        digSix={six}
+      />
+      <CountDown reverse={reverse} />
+    </StrictMode>
+  );
 
-    </React.StrictMode>,
-  )
-}, 1000)
+}, 1000);
