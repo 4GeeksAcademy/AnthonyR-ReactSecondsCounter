@@ -35,6 +35,8 @@ const resume = (e) => {
   } else if (isReversed && counter === 0) {
     isReversed = false;
     isPaused = false;
+    targetValueReverse = null;
+    targetValueAudio = null;
   } else {
     isPaused = false;
   }
@@ -72,19 +74,15 @@ const reverse = (e) => {
 }
 
 const interval = setInterval(() => {
-  if (targetValueAudio !== null && targetValueAudio === counter) {
-    audio.play();
-    isPaused = true;
-  }
-
-  if (targetValueReverse !== null && targetValueReverse === counter) {
-    isReversed = true;
-  }
-
+  
   if (isPaused) {
     return
   }
-
+  
+  
+  if (targetValueReverse !== null && targetValueReverse === counter) {
+    isReversed = true;
+  }
 
 
   counter = isReversed ? counter - 1 : counter + 1;
@@ -118,6 +116,9 @@ const interval = setInterval(() => {
     </StrictMode>
   );
 
-
+  if (targetValueAudio !== null && targetValueAudio === counter) {
+    audio.play();
+    isPaused = true;
+  }
 
 }, 1000);
