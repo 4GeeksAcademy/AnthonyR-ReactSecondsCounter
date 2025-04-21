@@ -18,24 +18,27 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 // Variables de control
 let counter = 0;
 let isReversed = false;
+let targetValue = null;
 
 
 const reverse = (e) => {
-  const inputValue = parseInt(e.target.value);
-  if (!isNaN(inputValue) && inputValue === counter) {
-    isReversed = true;
+
+  const input = parseInt(e.target.value);
+  if (!isNaN(input)) {
+    targetValue = input;
   }
 }
 
 
 const interval = setInterval(() => {
-  if (isReversed) {
-    counter--;
-    if (counter === 0) {
-      clearInterval(interval);
-    }
-  } else {
-    counter++;
+  if (targetValue !== null && targetValue === counter) {
+    isReversed = true;
+  }
+
+  counter = isReversed ? counter - 1 : counter + 1;
+
+  if (counter === 0 && isReversed) {
+    clearInterval(interval);
   }
 
 
