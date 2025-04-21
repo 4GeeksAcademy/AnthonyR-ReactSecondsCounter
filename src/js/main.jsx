@@ -13,48 +13,84 @@ import Home from './components/Home';
 import SecondsCounter from './components/counter';
 import { CountDown } from './components/countdown';
 import { Buttons } from './components/buttons';
+import { Alarm } from './components/alarm';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 
-// Variables de control
 let counter = 0;
 let isReversed = false;
-let targetValue = null;
+let targetValueReverse = null;
+let targetValueAudio = null;
 let isPaused = false;
+let audio = document.querySelector('audio');
+
 
 const stop = (e) => {
   isPaused = true;
 }
 
 const resume = (e) => {
-  isPaused = false;
+  if (isReversed && counter !== 0) {
+    isPaused = false;
+  } else if (isReversed && counter === 0) {
+    isReversed = false;
+    isPaused = false;
+  } else {
+    isPaused = false;
+  }
 }
 
 const restart = (e) => {
-  counter = -1;
+  if (counter === 0) {
+    isReversed = false;
+    isPaused = false;
+    targetValueAudio = null;
+    targetValueReverse = null;
+  } else {
+    counter = -1;
+    isReversed = false;
+    isPaused = false;
+    targetValueAudio = null;
+    targetValueReverse = null;
+  }
+
+}
+
+const alarm = (e) => {
+  const input = parseInt(e.target.value);
+  if (!isNaN(input)) {
+    targetValueAudio = input;
+  }
 }
 
 const reverse = (e) => {
 
   const input = parseInt(e.target.value);
   if (!isNaN(input)) {
-    targetValue = input;
+    targetValueReverse = input;
   }
 }
 
 const interval = setInterval(() => {
+  if (targetValueAudio !== null && targetValueAudio === counter) {
+    audio.play();
+    isPaused = true;
+  }
+
+  if (targetValueReverse !== null && targetValueReverse === counter) {
+    isReversed = true;
+  }
+
   if (isPaused) {
     return
   }
 
-  if (targetValue !== null && targetValue === counter) {
-    isReversed = true;
-  }
+
 
   counter = isReversed ? counter - 1 : counter + 1;
 
   if (counter === 0 && isReversed) {
-    clearInterval(interval);
+    isPaused = true;
   }
 
 
@@ -78,7 +114,10 @@ const interval = setInterval(() => {
       />
       <CountDown reverse={reverse} />
       <Buttons stop={stop} resume={resume} restart={restart} />
+      <Alarm alarm={alarm} />
     </StrictMode>
   );
+
+
 
 }, 1000);
