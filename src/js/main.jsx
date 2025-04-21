@@ -12,6 +12,7 @@ import '../styles/index.css'
 import Home from './components/Home';
 import SecondsCounter from './components/counter';
 import { CountDown } from './components/countdown';
+import { Buttons } from './components/buttons';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 
@@ -19,7 +20,19 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 let counter = 0;
 let isReversed = false;
 let targetValue = null;
+let isPaused = false;
 
+const stop = (e) => {
+  isPaused = true;
+}
+
+const resume = (e) => {
+  isPaused = false;
+}
+
+const restart = (e) => {
+  counter = -1;
+}
 
 const reverse = (e) => {
 
@@ -29,8 +42,11 @@ const reverse = (e) => {
   }
 }
 
-
 const interval = setInterval(() => {
+  if (isPaused) {
+    return
+  }
+
   if (targetValue !== null && targetValue === counter) {
     isReversed = true;
   }
@@ -61,6 +77,7 @@ const interval = setInterval(() => {
         digSix={six}
       />
       <CountDown reverse={reverse} />
+      <Buttons stop={stop} resume={resume} restart={restart} />
     </StrictMode>
   );
 
